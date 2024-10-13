@@ -1,0 +1,30 @@
+jobs:
+  run-checks:
+    name: Run checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject workflow pull requests
+        if: |
+          github.event.pull_request.merged == true
+          && contains(github.event.pull_request.labels.*.name, 'workflows')
+        run: |
+          echo "ERROR: The 'workflows' label is present."
+          exit 1
+
+      - name: Extract ref
+        id: extract-ref
+        run: echo "ref=${{ github.event.repository.default_branch }}" >> $GITHUB_OUTPUT
+
+      - name: Checkout code
+        uses: actions/checkout@v4.2.0
+        with:
+          ref: ${{ steps.extract-ref.outputs.ref }}
+          fetch-depth: 0
+
+      - name: Check version tag
+        run: |
+          if git tag --points-at HEAD | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            exit 0
+          fi
+          echo "ERROR: There needs to be a version tag."
+          exit 1
