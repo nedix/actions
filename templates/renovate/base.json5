@@ -1,0 +1,32 @@
+{
+  labels: [
+    "dependencies",
+    "renovate",
+  ],
+  baseBranches: [
+    "main",
+  ],
+  enabledManagers: [
+    "custom.regex",
+    "github-actions",
+  ],
+  customManagers: [
+  ],
+  packageRules: [
+    {
+      description: "Disable grouping for all dependencies",
+      matchPackagePatterns: [".*"],
+      groupName: null,
+    },
+    {
+      description: "Label workflows",
+      matchManagers: ["github-actions"],
+      addLabels: ["workflows"],
+    },
+    {
+      description: "Label workflows",
+      matchPackageNames: ["renovate/renovate"],
+      addLabels: ["workflows"],
+    },
+  ],
+}
