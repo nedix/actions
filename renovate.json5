@@ -1,0 +1,18 @@
+{
+  baseBranches: [
+    "main",
+  ],
+  enabledManagers: [
+    "custom.regex",
+    "github-actions",
+  ],
+  customManagers: [
+  ],
+  packageRules: [
+    {
+      description: "Disable grouping for all dependencies",
+      matchPackagePatterns: [".*"],
+      groupName: null,
+    },
+  ],
+}
