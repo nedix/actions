@@ -1,0 +1,31 @@
+name: Update dependencies
+description: Update dependencies with Renovate.
+
+inputs:
+  app_id:
+    description: GitHub app id.
+    required: true
+  app_pem:
+    description: GitHub app pem.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - id: generate-app-token
+      uses: nedix/actions/update-dependencies/01-generate-app-token@main
+      with:
+        app_id: ${{ inputs.app_id }}
+        app_pem: ${{ inputs.app_pem }}
+
+    - if: contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
+      id: renovate
+      uses: nedix/actions/update-dependencies/02-renovate@main
+      with:
+        token: ${{ steps.generate-app-token.outputs.token }}
+
+    - if: github.event_name == 'pull_request_target'
+      id: update-version
+      uses: nedix/actions/update-dependencies/03-update-version@main
+      with:
+        token: ${{ steps.generate-app-token.outputs.token }}

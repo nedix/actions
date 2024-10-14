@@ -1,14 +1,5 @@
 {
   extends: [
-    "https://raw.githubusercontent.com/nedix/actions/main/renovate/base.json5",
-  ],
-  customManagers: [
-    {
-      depNameTemplate: "Renovate",
-      fileMatch: ["^.github/workflows/renovate.yaml$"],
-      matchStrings: ["renovate-version: (?<currentValue>.*?)\\n"],
-      datasourceTemplate: "docker",
-      packageNameTemplate: "renovate/renovate",
-    }
+    "https://raw.githubusercontent.com/nedix/actions/main/templates/renovate/base.json5",
   ],
 }

@@ -1,6 +1,0 @@
-jobs:
-  call-tags-workflow:
-    name: Tag pushed
-    needs:
-      - push-tag
-    uses: ./.github/workflows/tags.yaml

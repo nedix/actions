@@ -1,0 +1,35 @@
+name: Update package
+description: Build and push a new package when a tag has been pushed.
+
+inputs:
+  platforms:
+    description: Create package for these platforms.
+    required: true
+  registry:
+    description: Url for the package registry.
+    required: true
+  registry_username:
+    description: Username for the package registry.
+    required: true
+  registry_password:
+    description: Password for the package registry.
+    required: true
+  tags:
+    description: List of tags separated by newline characters.
+
+runs:
+  using: composite
+  steps:
+    - id: check-version-tag
+      uses: nedix/actions/update-package/01-check-version-tag@main
+      continue-on-error: true
+
+    - if: steps.run-checks.outcome == 'success'
+      id: update-package
+      uses: nedix/actions/update-package/02-update-package@main
+      with:
+        platforms: ${{ inputs.platforms }}
+        registry: ${{ inputs.registry }}
+        registry_username: ${{ inputs.registry_username }}
+        registry_password: ${{ inputs.registry_password }}
+        tags: ${{ input.tags }}
