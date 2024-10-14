@@ -1,0 +1,17 @@
+name: Run checks
+description: '# TODO'
+
+inputs:
+  command:
+    description: The command that runs the check.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - id: run-test-suite
+      name: Run test suite
+      shell: sh
+      run: |
+        set -e
+        ${{ inputs.command }}

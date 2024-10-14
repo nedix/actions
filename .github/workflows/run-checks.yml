@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: run-checks
-        shell: sh
-        run: |
-          set -e
+        name: Run checks
+        uses: nedix/actions/run-checks@main
+        with:
+          command: echo 'Check'
