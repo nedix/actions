@@ -1,0 +1,14 @@
+name: Run checks
+
+on:
+  workflow_call:
+
+jobs:
+  run-checks:
+    name: Run checks
+    runs-on: ubuntu-latest
+    steps:
+      - id: run-checks
+        shell: sh
+        run: |
+          set -e

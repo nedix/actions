@@ -1,0 +1,5 @@
+{
+  extends: [
+    "https://raw.githubusercontent.com/nedix/actions/main/renovate.json5",
+  ],
+}
