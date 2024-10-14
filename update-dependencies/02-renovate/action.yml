@@ -46,4 +46,6 @@ runs:
     - id: save-change-count
       name: Save change count
       shell: sh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
       run: echo "change-count=$(gh pr list --search 'head:renovate/ pushed:>${{ steps.save-start-date.outputs.start-date }}' --jq length)" >> $GITHUB_OUTPUT
