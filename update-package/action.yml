@@ -32,4 +32,4 @@ runs:
         registry: ${{ inputs.registry }}
         registry_username: ${{ inputs.registry_username }}
         registry_password: ${{ inputs.registry_password }}
-        tags: ${{ input.tags }}
+        tags: ${{ inputs.tags }}
