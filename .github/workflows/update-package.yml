@@ -1,14 +1,6 @@
 name: Update package
 
 on:
-  merge_group:
-  pull_request_target:
-    branches:
-      - 'main'
-    tags:
-      - '*'
-    types:
-      - 'closed'
   push:
     tags:
       - '*'
