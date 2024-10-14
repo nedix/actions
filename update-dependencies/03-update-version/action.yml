@@ -18,7 +18,7 @@ runs:
 
     - id: bump-version
       name: Bump version
-      uses: anothrNick/github-tag-action@1.70.0
+      uses: anothrNick/github-tag-action@1.71.0
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
         WITH_V: true
