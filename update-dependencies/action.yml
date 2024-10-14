@@ -18,13 +18,17 @@ runs:
         app_id: ${{ inputs.app_id }}
         app_pem: ${{ inputs.app_pem }}
 
-    - if: contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
+    - if: |
+        contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
+        || github.event.pull_request.merged == true
       id: renovate
       uses: nedix/actions/update-dependencies/02-renovate@main
       with:
         token: ${{ steps.generate-app-token.outputs.token }}
 
-    - if: github.event.pull_request.merged == true
+    - if: |
+        github.event.pull_request.merged == true
+        && steps.renovate.outputs.made-changes == 'false'
       id: update-version
       uses: nedix/actions/update-dependencies/03-update-version@main
       with:

@@ -6,6 +6,11 @@ inputs:
     description: GitHub app token.
     required: true
 
+outputs:
+  made_changes:
+    description: "'true' if this action made any changes to the repository."
+    value: ${{ steps.save-change-count.outputs.change-count > 0 && 'true' || 'false' }}
+
 runs:
   using: composite
   steps:
@@ -17,6 +22,11 @@ runs:
         do_not_skip:
         skip_after_successful_duplicate: false
       continue-on-error: true
+
+    - id: save-start-date
+      name: Save start date
+      shell: sh
+      run: echo "start-date=$(date +'%Y-%m-%dT%H:%M:%S%:z')" >> $GITHUB_OUTPUT
 
     - if: steps.skip-duplicate-actions.outputs.should-skip != 'true'
       id: renovate-dependencies
@@ -32,3 +42,8 @@ runs:
       with:
         renovate-version: 38.59.2
         token: ${{ inputs.token }}
+
+    - id: save-change-count
+      name: Save change count
+      shell: sh
+      run: echo "change-count=$(gh pr list --search 'head:renovate/ pushed:>${{ steps.save-start-date.outputs.start-date }}' --jq length)" >> $GITHUB_OUTPUT
