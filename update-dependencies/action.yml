@@ -24,7 +24,7 @@ runs:
       with:
         token: ${{ steps.generate-app-token.outputs.token }}
 
-    - if: github.event_name == 'pull_request_target'
+    - if: github.event.pull_request.merged == true
       id: update-version
       uses: nedix/actions/update-dependencies/03-update-version@main
       with:
