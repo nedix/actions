@@ -1,0 +1,58 @@
+name: Renovate
+description: Perform automatic dependency updates.
+
+inputs:
+  token:
+    description: GitHub app token.
+    required: true
+
+outputs:
+  made_changes:
+    description: "'true' if this action made any changes to the repository."
+    value: ${{ steps.save-change-count.outputs.change-count > 0 && 'true' || 'false' }}
+
+runs:
+  using: composite
+  steps:
+    - id: skip-duplicate-actions
+      name: Skip duplicate actions
+      uses: fkirc/skip-duplicate-actions@v5.3.1
+      with:
+        concurrent_skipping: same_content_newer
+        do_not_skip:
+        skip_after_successful_duplicate: false
+      continue-on-error: true
+
+    - id: checkout-code
+      name: Checkout code
+      uses: actions/checkout@v4.2.1
+      with:
+        ref: ${{ github.event.repository.default_branch }}
+        fetch-depth: 0
+
+    - id: save-start-date
+      name: Save start date
+      shell: sh
+      run: echo "start-date=$(date +'%Y-%m-%dT%H:%M:%S%:z')" >> $GITHUB_OUTPUT
+
+    - if: steps.skip-duplicate-actions.outputs.should-skip != 'true'
+      id: renovate-dependencies
+      name: Renovate dependencies
+      uses: renovatebot/github-action@v40.3.3
+      env:
+        LOG_LEVEL: debug
+        RENOVATE_AUTODISCOVER: true
+        RENOVATE_AUTODISCOVER_FILTER: ${{ github.event.repository.full_name }}
+        RENOVATE_AUTOMERGE: true
+        RENOVATE_PLATFORM: github
+        RENOVATE_PR_HOURLY_LIMIT: 0
+      with:
+        renovate-version: 38.59.2
+        token: ${{ inputs.token }}
+
+    - id: save-change-count
+      name: Save change count
+      shell: sh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: echo "change-count=$(gh pr list --search 'head:renovate/ pushed:>${{ steps.save-start-date.outputs.start-date }}' --json number --jq length)" >> $GITHUB_OUTPUT
