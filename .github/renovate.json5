@@ -1,5 +1,5 @@
 {
   extends: [
-    "https://raw.githubusercontent.com/nedix/actions/main/templates/renovate/base.json5",
+    "https://raw.githubusercontent.com/nedix/actions/main/update-dependencies/base.json5",
   ],
 }
