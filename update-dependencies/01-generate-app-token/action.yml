@@ -23,4 +23,4 @@ runs:
       with:
         app_id: ${{ inputs.app_id }}
         private_key: ${{ inputs.app_pem }}
-        repositories: ${{ toJSON(github.repository) }}
+        repository: ${{ toJSON(github.repository) }}
