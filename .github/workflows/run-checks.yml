@@ -1,7 +1,11 @@
 name: Run checks
 
 on:
-  workflow_call:
+  merge_group:
+  pull_request_target:
+    branches: ['main']
+    paths-ignore: ['.github/**/*']
+    types: ['closed']
 
 jobs:
   run-checks:
