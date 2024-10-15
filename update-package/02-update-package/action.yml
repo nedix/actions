@@ -16,6 +16,15 @@ inputs:
   tags:
     description: Collection of tags separated by newlines.
     required: true
+  enable_short_sha:
+    description: Enable the short sha package tag.
+    default: 'true'
+  enable_version_tag:
+    description: Enable the semver package tag.
+    default: 'true'
+  enable_latest_tag:
+    description: Enable the latest package tag.
+    default: 'true'
 
 runs:
   using: composite
@@ -43,6 +52,13 @@ runs:
         fetch-depth: 0
         ref: ${{ github.event.repository.default_branch }}
 
+    - id: prepare-tags
+      name: Prepare tags
+      shell: sh
+      run: |
+        echo "short_sha=$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
+        echo "version_tag=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+
     - id: build-and-push
       name: Build and push
       uses: docker/build-push-action@v6
@@ -50,10 +66,14 @@ runs:
         context: .
         platforms: ${{ inputs.platforms }}
         push: true
-        tags: ${{ inputs.tags }}
+        tags: |
+          ${{ inputs.enable_latest_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, github.repository, 'latest') }}
+          ${{ inputs.enable_short_sha == 'true' && format('{0}/{1}:{2}', inputs.registry, github.repository, steps.prepare-tags.outputs.short_sha) }}
+          ${{ inputs.enable_version_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, github.repository, steps.prepare-tags.outputs.version_tag) }}
+          ${{ inputs.tags }}
 
 # TODO: package cache
 #        cache-from: |
-#          type=registry,ref=${{ format('ghcr.io/{0}:{1}', github.repository, 'cache') }}
+#          type=registry,ref=${{ format('${{ inputs.registry }}/{0}:{1}', github.repository, 'cache') }}
 #        cache-to: |
-#          type=registry,ref=${{ format('ghcr.io/{0}:{1}', github.repository, 'cache') }},mode=max
+#          type=registry,ref=${{ format('${{ inputs.registry }}/{0}:{1}', github.repository, 'cache') }},mode=max
