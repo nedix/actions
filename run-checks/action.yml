@@ -3,14 +3,21 @@ description: '# TODO'
 
 inputs:
   command:
-    description: The command that runs the check.
+    description: Runs a test command.
     required: true
 
 runs:
   using: composite
   steps:
-    - id: run-test-suite
-      name: Run test suite
+    - id: checkout-code
+      name: Checkout code
+      uses: actions/checkout@v4.2.1
+      with:
+        ref: ${{ github.head_ref || github.ref_name }}
+        fetch-depth: 0
+
+    - id: run-test-command
+      name: Run test command
       shell: sh
       run: |
         set -e
