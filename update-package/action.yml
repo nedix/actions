@@ -25,7 +25,7 @@ runs:
       uses: nedix/actions/update-package/01-check-version-tag@main
       continue-on-error: true
 
-    - if: steps.run-checks.outcome == 'success'
+    - if: steps.check-version-tag.outcome == 'success'
       id: update-package
       name: Update package
       uses: nedix/actions/update-package/02-update-package@main
