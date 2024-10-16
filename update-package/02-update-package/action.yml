@@ -17,7 +17,7 @@ inputs:
     description: Password for the package registry
     required: true
   tags:
-    description: Collection of tags separated by newlines.
+    description: List of tags.
     required: true
   enable_short_sha:
     description: Enable the short sha package tag.
