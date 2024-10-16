@@ -2,14 +2,20 @@ name: Update package
 description: Build and push a new package when a tag has been pushed.
 
 inputs:
+  context:
+    description: Path or URL pointing to a set of files.
+    default: '.'
+  file:
+    description: Name of the Containerfile(Dockerfile).
+    default: 'auto'
   platforms:
-    description: Create package for these platforms.
+    description: Comma-separated list of platform architectures.
     required: true
   registry:
     description: Name of the package registry.
     required: true
   registry_path:
-    description: Path on the registry to store the package.
+    description: Path on the registry where to push the package.
     required: true
   registry_username:
     description: Username for the package registry.
@@ -18,7 +24,17 @@ inputs:
     description: Password for the package registry.
     required: true
   tags:
-    description: List of tags separated by newline characters.
+    description: List of tags.
+    required: true
+  enable_short_sha:
+    description: Enable the short sha package tag.
+    default: 'true'
+  enable_version_tag:
+    description: Enable the semver package tag.
+    default: 'true'
+  enable_latest_tag:
+    description: Enable the latest package tag.
+    default: 'true'
 
 runs:
   using: composite
@@ -33,6 +49,8 @@ runs:
       name: Update package
       uses: nedix/actions/update-package/02-update-package@main
       with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.file }}
         platforms: ${{ inputs.platforms }}
         registry: ${{ inputs.registry }}
         registry_path: ${{ inputs.registry_path }}

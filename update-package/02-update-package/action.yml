@@ -1,14 +1,20 @@
 name: Update package
 
 inputs:
+  context:
+    description: Path or URL pointing to a set of files.
+    default: '.'
+  file:
+    description: Name of the Containerfile(Dockerfile).
+    default: 'auto'
   platforms:
-    description: Create package for these platforms.
+    description: Comma-separated list of platform architectures.
     required: true
   registry:
     description: Name of the package registry.
     required: true
   registry_path:
-    description: Path on the registry to store the package.
+    description: Path on the registry where to push the package.
     required: true
   registry_username:
     description: Username for the package registry
@@ -62,11 +68,23 @@ runs:
         echo "short_sha=$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
         echo "version_tag=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
 
+    - if: inputs.file == 'auto'
+      id: find-containerfile
+      name: Find containerfile
+      shell: sh
+      run: |
+        cd "${{ inputs.context }}"
+        test -f Containerfile && echo "file=Containerfile" >> $GITHUB_OUTPUT && exit 0
+        test -f Dockerfile && echo "file=Dockerfile" >> $GITHUB_OUTPUT && exit 0
+        echo "Failed to find a containerfile within the given context path/URL."
+        exit 1
+
     - id: build-and-push
       name: Build and push
       uses: docker/build-push-action@v6
       with:
-        context: .
+        context: ${{ inputs.context }}
+        file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
         push: true
         tags: |
