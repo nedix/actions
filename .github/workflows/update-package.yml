@@ -4,6 +4,12 @@ on:
   push:
     tags: ['*']
 
+permissions:
+  attestations: write
+  id-token: write
+  packages: write
+  security-events: write
+
 jobs:
   update-package:
     name: Update package
@@ -17,4 +23,4 @@ jobs:
           registry: ghcr.io
           registry_path: ${{ github.repository }}
           registry_username: ${{ github.actor }}
-          registry_password: ${{ secrets.GITHUB_TOKEN }}
+          registry_password: ${{ github.token }}

@@ -2,7 +2,7 @@ name: Update package
 
 inputs:
   context:
-    description: Path or URL pointing to a set of files.
+    description: Path pointing to a set of files.
     default: '.'
   file:
     description: Name of the Containerfile(Dockerfile).
@@ -46,6 +46,14 @@ runs:
         username: ${{ inputs.registry_username }}
         password: ${{ inputs.registry_password }}
 
+    - id: cache-registry-login
+      name: Login to cache package registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+
     - id: setup-qemu
       name: Setup QEMU
       uses: docker/setup-qemu-action@v3
@@ -76,13 +84,17 @@ runs:
         cd "${{ inputs.context }}"
         test -f Containerfile && echo "file=Containerfile" >> $GITHUB_OUTPUT && exit 0
         test -f Dockerfile && echo "file=Dockerfile" >> $GITHUB_OUTPUT && exit 0
-        echo "Failed to find a containerfile within the given context path/URL."
-        exit 1
+        echo "Failed to find a containerfile within the given context path." && echo "file=none" >> $GITHUB_OUTPUT
 
-    - id: build-and-push
+    - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
+      id: build-and-push
       name: Build and push
       uses: docker/build-push-action@v6
       with:
+        cache-from: |
+          type=registry,ref=${{ format('{0}/{1}:{2}', 'ghcr.io', github.repository, 'cache') }}
+        cache-to: |
+          type=registry,ref=${{ format('{0}/{1}:{2}', 'ghcr.io', github.repository, 'cache') }},mode=max
         context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
@@ -93,8 +105,28 @@ runs:
           ${{ inputs.enable_version_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.version_tag) }}
           ${{ inputs.tags }}
 
-# TODO: package cache
-#        cache-from: |
-#          type=registry,ref=${{ format('${{ inputs.registry }}/{0}:{1}', github.repository, 'cache') }}
-#        cache-to: |
-#          type=registry,ref=${{ format('${{ inputs.registry }}/{0}:{1}', github.repository, 'cache') }},mode=max
+    - if: steps.build-and-push.outcome == 'success'
+      id: extract-sbom
+      name: Extract SBOM
+      uses: docker/scout-action@v1
+      with:
+        command: cves,sbom
+        format: spdx
+        image: "${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}"
+        output: sbom.spdx.json
+        sarif-file: sarif.output.json
+
+    - if: steps.extract-sbom.outcome == 'success'
+      id: attest-sbom
+      name: Attest SBOM
+      uses: actions/attest-sbom@v2.2.0
+      with:
+        sbom-path: sbom.spdx.json
+        subject-path: ${{ github.workspace }}
+
+    - if: steps.extract-sbom.outcome == 'success'
+      id: upload-sarif
+      name: Upload SARIF
+      uses: github/codeql-action/upload-sarif@v3.28.18
+      with:
+        sarif_file: sarif.output.json

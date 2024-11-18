@@ -2,37 +2,40 @@ name: Update dependencies
 description: Update dependencies with Renovate.
 
 inputs:
-  app_id:
-    description: GitHub app id.
-    required: true
-  app_pem:
-    description: GitHub app pem.
-    required: true
+  scheduled_updates_enabled:
+    description: Set value to `true` to enable scheduled updates.
+    default: 'false'
 
 runs:
   using: composite
   steps:
-    - id: generate-app-token
-      name: Generate app token
-      uses: nedix/actions/update-dependencies/01-generate-app-token@main
-      with:
-        app_id: ${{ inputs.app_id }}
-        app_pem: ${{ inputs.app_pem }}
+    - id: check-skip-schedule
+      env:
+        SCHEDULED_UPDATE: ${{ github.event_name == 'schedule' }}
+        SCHEDULED_UPDATES_ENABLED: ${{ inputs.scheduled_updates_enabled }}
+      shell: sh
+      run: |
+        if [ "$SCHEDULED_UPDATE" == "true" ] && [ "$SCHEDULED_UPDATES_ENABLED" != "true" ]; then
+          echo "should-skip-schedule=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "should-skip-schedule=false" >> "$GITHUB_OUTPUT"
+        fi    
 
     - if: |
-        contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
+        steps.check-skip-schedule.outputs.should-skip-schedule == 'false'
+        && contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
         || github.event.pull_request.merged == true
       id: renovate
       name: Renovate
-      uses: nedix/actions/update-dependencies/02-renovate@main
+      uses: nedix/actions/update-dependencies/01-renovate@main
       with:
-        token: ${{ steps.generate-app-token.outputs.token }}
+        token: ${{ github.token }}
 
     - if: |
         github.event.pull_request.merged == true
         && steps.renovate.outputs.made_changes == 'false'
       id: update-version
       name: Update version
-      uses: nedix/actions/update-dependencies/03-update-version@main
+      uses: nedix/actions/update-dependencies/02-update-version@main
       with:
-        token: ${{ steps.generate-app-token.outputs.token }}
+        token: ${{ github.token }}
