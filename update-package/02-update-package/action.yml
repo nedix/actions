@@ -2,7 +2,7 @@ name: Update package
 
 inputs:
   context:
-    description: Path or URL pointing to a set of files.
+    description: Path pointing to a set of files.
     default: '.'
   file:
     description: Name of the Containerfile(Dockerfile).
@@ -76,7 +76,7 @@ runs:
         cd "${{ inputs.context }}"
         test -f Containerfile && echo "file=Containerfile" >> $GITHUB_OUTPUT && exit 0
         test -f Dockerfile && echo "file=Dockerfile" >> $GITHUB_OUTPUT && exit 0
-        echo "Failed to find a containerfile within the given context path/URL."
+        echo "Failed to find a containerfile within the given context path."
         exit 1
 
     - id: build-and-push
