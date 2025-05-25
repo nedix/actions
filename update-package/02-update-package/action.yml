@@ -115,6 +115,14 @@ runs:
         docker buildx imagetools inspect ${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }} --format "{{ json .SBOM }}" > sbom.spdx.json
 
     - if: steps.extract-sbom.outcome == 'success'
+      id: save-sbom
+      name: Temporarily save SBOM
+      uses: actions/upload-artifact@v2
+      with:
+        name: SBOM
+        path: sbom.spdx.json
+
+    - if: steps.extract-sbom.outcome == 'success'
       id: publish-sbom
       name: Publish SBOM
       uses: anchore/sbom-action/publish-sbom@v0.20.0
