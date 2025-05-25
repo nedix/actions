@@ -83,6 +83,10 @@ runs:
       name: Build and push
       uses: docker/build-push-action@v6
       with:
+        cache-from: |
+          type=registry,ref=${{ format('{0}/{1}/{2}:{3}', 'ghcr.io', 'nedix/actions', github.repository, 'cache') }}
+        cache-to: |
+          type=registry,ref=${{ format('{0}/{1}/{2}:{3}', 'ghcr.io', 'nedix/actions', github.repository, 'cache') }},mode=max
         context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
@@ -94,9 +98,3 @@ runs:
           ${{ inputs.enable_short_sha == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.short_sha) }}
           ${{ inputs.enable_version_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.version_tag) }}
           ${{ inputs.tags }}
-
-# TODO: package cache
-#        cache-from: |
-#          type=registry,ref=${{ format('${{ inputs.registry }}/{0}:{1}', github.repository, 'cache') }}
-#        cache-to: |
-#          type=registry,ref=${{ format('${{ inputs.registry }}/{0}:{1}', github.repository, 'cache') }},mode=max
