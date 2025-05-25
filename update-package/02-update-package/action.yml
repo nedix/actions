@@ -47,7 +47,7 @@ runs:
         password: ${{ inputs.registry_password }}
 
     - id: cache-registry-login
-      name: Login to GitHub package registry
+      name: Login to cache package registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
