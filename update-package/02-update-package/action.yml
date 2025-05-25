@@ -92,9 +92,9 @@ runs:
       uses: docker/build-push-action@v6
       with:
         cache-from: |
-          type=registry,ref=${{ format('{0}/{1}/{2}:{3}', 'ghcr.io', 'nedix/actions', github.repository, 'cache') }}
+          type=registry,ref=${{ format('{0}/{1}:{2}', 'ghcr.io', github.repository, 'cache') }}
         cache-to: |
-          type=registry,ref=${{ format('{0}/{1}/{2}:{3}', 'ghcr.io', 'nedix/actions', github.repository, 'cache') }},mode=max
+          type=registry,ref=${{ format('{0}/{1}:{2}', 'ghcr.io', github.repository, 'cache') }},mode=max
         context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
