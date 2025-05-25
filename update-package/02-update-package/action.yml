@@ -107,13 +107,15 @@ runs:
           ${{ inputs.enable_version_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.version_tag) }}
           ${{ inputs.tags }}
 
-    - id: extract-sbom
+    - if: ${{ steps.build-and-push.conclusion == 'success' }}
+      id: extract-sbom
       name: Extract SBOM
       shell: sh
       run: |
         docker buildx imagetools inspect ${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }} --format "{{ json .SBOM }}" > sbom.spdx.json
 
-    - id: publish-sbom
+    - if: ${{ steps.extract-sbom.conclusion == 'success' }}
+      id: publish-sbom
       name: Publish SBOM
       uses: anchore/sbom-action/publish-sbom@v0.20.0
       with:
