@@ -127,4 +127,4 @@ runs:
       name: Publish SBOM
       uses: anchore/sbom-action/publish-sbom@v0.20.0
       with:
-        sbom-artifact-match: 'sbom.spdx.json'
+        sbom-artifact-match: '.*\\.spdx.json$'
