@@ -46,6 +46,14 @@ runs:
         username: ${{ inputs.registry_username }}
         password: ${{ inputs.registry_password }}
 
+    - id: cache-registry-login
+      name: Login to cache package registry
+      uses: docker/login-action@v3
+      with:
+        registry: 'ghcr.io'
+        username: ${{ inputs.registry_username }}
+        password: ${{ inputs.registry_password }}
+
     - id: setup-qemu
       name: Setup QEMU
       uses: docker/setup-qemu-action@v3
@@ -76,10 +84,10 @@ runs:
         cd "${{ inputs.context }}"
         test -f Containerfile && echo "file=Containerfile" >> $GITHUB_OUTPUT && exit 0
         test -f Dockerfile && echo "file=Dockerfile" >> $GITHUB_OUTPUT && exit 0
-        echo "Failed to find a containerfile within the given context path."
-        exit 1
+        echo "Failed to find a containerfile within the given context path." && echo "file=none" >> $GITHUB_OUTPUT
 
-    - id: build-and-push
+    - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
+      id: build-and-push
       name: Build and push
       uses: docker/build-push-action@v6
       with:
