@@ -117,7 +117,7 @@ runs:
     - if: steps.extract-sbom.outcome == 'success'
       id: save-sbom
       name: Temporarily save SBOM
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: SBOM
         path: sbom.spdx.json
