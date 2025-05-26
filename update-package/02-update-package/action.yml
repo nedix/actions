@@ -111,8 +111,9 @@ runs:
       name: Extract SBOM
       shell: sh
       run: |
-        docker scout sbom --output sbom.spdx.json ${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}
-        docker buildx imagetools inspect fabiosegredo/attestations:1.0.1 --format "{{json .Provenance.SLSA}}" > provenance.slsa
+        PACKAGE_PATH="${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}"
+        docker scout sbom --output sbom.spdx.json "$PACKAGE_PATH"
+        docker buildx imagetools inspect "$PACKAGE_PATH" --format "{{ json .Provenance.SLSA }}" > provenance.slsa
 
     - if: steps.extract-sbom.outcome == 'success'
       name: Temporarily save SBOM
