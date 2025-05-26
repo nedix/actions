@@ -1,19 +1,24 @@
 name: Update dependencies
 description: Update dependencies with Renovate.
 
+inputs:
+  enable_scheduled_updates:
+    description: Input variable to enable scheduled updates.
+    required: true
+
 runs:
   using: composite
   steps:
-    - id: check-skip-cron
+    - id: check-skip-schedule
       env:
         SCHEDULED_UPDATE: ${{ github.event_name == 'schedule' }}
-        SCHEDULED_UPDATES_ENABLED: ${{ vars.SCHEDULED_UPDATES_ENABLED }}
+        SCHEDULED_UPDATES_ENABLED: ${{ inputs.enable_scheduled_updates }}
       shell: sh
       run: |
         if [ "$SCHEDULED_UPDATE" = "true" ] && [ -z "$SCHEDULED_UPDATES_ENABLED" ]; then
-          echo "should-skip-cron=true" >> "$GITHUB_OUTPUT"
+          echo "should-skip-schedule=true" >> "$GITHUB_OUTPUT"
         else
-          echo "should-skip-cron=false" >> "$GITHUB_OUTPUT"
+          echo "should-skip-schedule=false" >> "$GITHUB_OUTPUT"
         fi    
 
     - id: generate-app-token
@@ -22,7 +27,7 @@ runs:
         echo "token=${{ github.token }}" >> "$GITHUB_OUTPUT"
 
     - if: |
-        steps.check-skip-cron.outputs.should-skip-cron == 'false'
+        steps.check-skip-schedule.outputs.should-skip-schedule == 'false'
         && contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
         || github.event.pull_request.merged == true
       id: renovate
