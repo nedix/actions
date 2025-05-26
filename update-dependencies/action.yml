@@ -4,16 +4,30 @@ description: Update dependencies with Renovate.
 runs:
   using: composite
   steps:
+    - id: check-skip-cron
+      env:
+        SCHEDULED_UPDATE: ${{ github.event_name == 'schedule' }}
+        SCHEDULED_UPDATES_ENABLED: ${{ secrets.SCHEDULED_UPDATES_ENABLED }}
+      shell: sh
+      run: |
+        if [ "$SCHEDULED_UPDATE" = "true" ] && [ -z "$SCHEDULED_UPDATES_ENABLED" ]; then
+          echo "should-skip-cron=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "should-skip-cron=false" >> "$GITHUB_OUTPUT"
+        fi    
+
     - id: generate-app-token
       shell: sh
-      run: echo "token=${{ github.token }}" >> "$GITHUB_OUTPUT"
+      run: |
+        echo "token=${{ github.token }}" >> "$GITHUB_OUTPUT"
 
     - if: |
-        contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
+        steps.check-skip-cron.outputs.should-skip-cron == 'false'
+        && contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
         || github.event.pull_request.merged == true
       id: renovate
       name: Renovate
-      uses: nedix/actions/update-dependencies/02-renovate@main
+      uses: nedix/actions/update-dependencies/01-renovate@main
       with:
         token: ${{ steps.generate-app-token.outputs.token }}
 
@@ -22,6 +36,6 @@ runs:
         && steps.renovate.outputs.made_changes == 'false'
       id: update-version
       name: Update version
-      uses: nedix/actions/update-dependencies/03-update-version@main
+      uses: nedix/actions/update-dependencies/02-update-version@main
       with:
         token: ${{ steps.generate-app-token.outputs.token }}
