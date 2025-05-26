@@ -109,10 +109,17 @@ runs:
     - if: steps.build-and-push.outcome == 'success'
       id: extract-sbom
       name: Extract SBOM
+      uses: docker/scout-action@v1
+      with:
+        command: sbom
+        image: "${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}"
+
+    - if: steps.build-and-push.outcome == 'success'
+      id: extract-slsa
+      name: Extract SLSA
       shell: sh
       run: |
         PACKAGE_PATH="${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}"
-        docker scout sbom "$PACKAGE_PATH" sbom.spdx.json
         docker buildx imagetools inspect "$PACKAGE_PATH" --format "{{ json .Provenance.SLSA }}" > provenance.slsa
 
     - if: steps.extract-sbom.outcome == 'success'
