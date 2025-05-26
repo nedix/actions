@@ -100,7 +100,6 @@ runs:
         platforms: ${{ inputs.platforms }}
         provenance: true
         push: true
-        sbom: true
         tags: |
           ${{ inputs.enable_latest_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, 'latest') }}
           ${{ inputs.enable_short_sha == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.short_sha) }}
