@@ -98,6 +98,7 @@ runs:
         context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
+        provenance: true
         push: true
         sbom: true
         tags: |
@@ -116,12 +117,19 @@ runs:
         sarif-file: sarif.output.json
 
     - if: steps.build-and-push.outcome == 'success'
-      id: extract-slsa
+      id: extract-provenance
       name: Extract SLSA
       shell: sh
       run: |
         PACKAGE_PATH="${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}"
         docker buildx imagetools inspect "$PACKAGE_PATH" --format "{{ json .Provenance.SLSA }}" > provenance.slsa
+
+    - if: steps.extract-provenance.outcome == 'success'
+      name: Temporarily save SLSA
+      uses: actions/upload-artifact@v4
+      with:
+        name: Provenancce
+        path: provenance.slsa
 
     - if: steps.extract-sbom.outcome == 'success'
       name: Temporarily save SBOM
@@ -129,13 +137,6 @@ runs:
       with:
         name: SBOM
         path: sbom.spdx.json
-
-    - if: steps.extract-sbom.outcome == 'success'
-      name: Temporarily save SBOM
-      uses: actions/upload-artifact@v4
-      with:
-        name: Provenancce
-        path: provenance.slsa
 
     - if: steps.extract-sbom.outcome == 'success'
       id: attest-sbom
