@@ -7,7 +7,7 @@ runs:
     - id: check-skip-cron
       env:
         SCHEDULED_UPDATE: ${{ github.event_name == 'schedule' }}
-        SCHEDULED_UPDATES_ENABLED: ${{ secrets.SCHEDULED_UPDATES_ENABLED }}
+        SCHEDULED_UPDATES_ENABLED: ${{ vars.SCHEDULED_UPDATES_ENABLED }}
       shell: sh
       run: |
         if [ "$SCHEDULED_UPDATE" = "true" ] && [ -z "$SCHEDULED_UPDATES_ENABLED" ]; then
