@@ -112,6 +112,7 @@ runs:
       uses: docker/scout-action@v1
       with:
         command: cves,sbom
+        format: spdx
         image: "${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}"
         output: sbom.spdx.json
         sarif-file: sarif.output.json
