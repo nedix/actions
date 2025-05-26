@@ -112,7 +112,7 @@ runs:
       shell: sh
       run: |
         PACKAGE_PATH="${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}"
-        docker scout sbom --output sbom.spdx.json "$PACKAGE_PATH"
+        docker scout sbom "$PACKAGE_PATH" sbom.spdx.json
         docker buildx imagetools inspect "$PACKAGE_PATH" --format "{{ json .Provenance.SLSA }}" > provenance.slsa
 
     - if: steps.extract-sbom.outcome == 'success'
