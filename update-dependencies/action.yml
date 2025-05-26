@@ -3,8 +3,8 @@ description: Update dependencies with Renovate.
 
 inputs:
   enable_scheduled_updates:
-    description: Input variable to enable scheduled updates.
-    required: true
+    description: Set value to `true` to enable scheduled updates.
+    default: 'false'
 
 runs:
   using: composite
