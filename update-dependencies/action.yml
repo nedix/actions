@@ -15,10 +15,10 @@ runs:
         SCHEDULED_UPDATES_ENABLED: ${{ inputs.enable_scheduled_updates }}
       shell: sh
       run: |
-        if [ "$SCHEDULED_UPDATE" = "true" ] && [ -z "$SCHEDULED_UPDATES_ENABLED" ]; then
-          echo "should-skip-schedule=true" >> "$GITHUB_OUTPUT"
-        else
+        if [ "$SCHEDULED_UPDATE" = "true" ] && [ "$SCHEDULED_UPDATES_ENABLED" = "true" ]; then
           echo "should-skip-schedule=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "should-skip-schedule=true" >> "$GITHUB_OUTPUT"
         fi    
 
     - id: generate-app-token
