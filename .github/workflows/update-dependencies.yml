@@ -15,19 +15,6 @@ jobs:
     name: Update dependencies
     runs-on: ubuntu-latest
     steps:
-      - id: check-skip-cron
-        env:
-          SCHEDULED_UPDATE: ${{ github.event_name == 'schedule' }}
-          SCHEDULED_UPDATES_ENABLED: ${{ secrets.SCHEDULED_UPDATES_ENABLED }}
-        shell: sh
-        run: |
-          if [ "$SCHEDULED_UPDATE" = "true" ] && [ -z "$SCHEDULED_UPDATES_ENABLED" ]; then
-            echo "should-skip-cron=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "should-skip-cron=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - if: steps.check-skip-cron.outputs.should-skip-cron == 'false'
-        id: update-dependencies
+      - id: update-dependencies
         name: Update dependencies
         uses: nedix/actions/update-dependencies@main
