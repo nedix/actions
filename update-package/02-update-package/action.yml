@@ -98,7 +98,6 @@ runs:
         context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
-        provenance: mode=max
         push: true
         sbom: true
         tags: |
@@ -112,7 +111,22 @@ runs:
       name: Extract SBOM
       shell: sh
       run: |
-        docker buildx imagetools inspect ${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }} --format "{{ json .SBOM.SPDX }}" > sbom.spdx.json
+        docker scout sbom --output sbom.spdx.json ${{ format('{0}/{1}@{2}', inputs.registry, inputs.registry_path, steps.build-and-push.outputs.digest) }}
+        docker buildx imagetools inspect fabiosegredo/attestations:1.0.1 --format "{{json .Provenance.SLSA}}" > provenance.slsa
+
+    - if: steps.extract-sbom.outcome == 'success'
+      name: Temporarily save SBOM
+      uses: actions/upload-artifact@v4
+      with:
+        name: SBOM
+        path: sbom.spdx.json
+
+    - if: steps.extract-sbom.outcome == 'success'
+      name: Temporarily save SBOM
+      uses: actions/upload-artifact@v4
+      with:
+        name: Provenancce
+        path: provenance.slsa
 
     - if: steps.extract-sbom.outcome == 'success'
       id: attest-sbom
