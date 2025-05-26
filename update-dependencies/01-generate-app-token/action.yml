@@ -18,9 +18,5 @@ runs:
   using: composite
   steps:
     - id: generate-app-token
-      name: Generate GitHub app token
-      uses: tibdex/github-app-token@v2.1.0
-      with:
-        app_id: ${{ inputs.app_id }}
-        private_key: ${{ inputs.app_pem }}
-        repositories: ${{ toJSON(github.repository) }}
+      shell: sh
+      run: echo "token=${{ github.token }}" >> "$GITHUB_OUTPUT"
