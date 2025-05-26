@@ -1,14 +1,6 @@
 name: Generate app token
 description: Generate the GitHub app token that will be used to update the dependencies.
 
-inputs:
-  app_id:
-    description: GitHub app id.
-    required: true
-  app_pem:
-    description: GitHub app pem.
-    required: true
-
 outputs:
   token:
     description: The GitHub app token that will be used to update the dependencies.

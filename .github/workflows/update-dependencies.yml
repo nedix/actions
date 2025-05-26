@@ -18,6 +18,3 @@ jobs:
       - id: update-dependencies
         name: Update dependencies
         uses: nedix/actions/update-dependencies@main
-        with:
-          app_id: ${{ secrets.RENOVATE_APP_ID }}
-          app_pem: ${{ secrets.RENOVATE_APP_PEM }}
