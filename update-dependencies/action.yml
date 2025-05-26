@@ -13,7 +13,7 @@ runs:
         || github.event.pull_request.merged == true
       id: renovate
       name: Renovate
-      uses: nedix/actions/update-dependencies/02-renovate@main
+      uses: nedix/actions/update-dependencies/01-renovate@main
       with:
         token: ${{ steps.generate-app-token.outputs.token }}
 
@@ -22,6 +22,6 @@ runs:
         && steps.renovate.outputs.made_changes == 'false'
       id: update-version
       name: Update version
-      uses: nedix/actions/update-dependencies/03-update-version@main
+      uses: nedix/actions/update-dependencies/02-update-version@main
       with:
         token: ${{ steps.generate-app-token.outputs.token }}
