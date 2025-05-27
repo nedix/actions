@@ -2,40 +2,46 @@ name: Update dependencies
 description: Update dependencies with Renovate.
 
 inputs:
-  scheduled_updates_enabled:
-    description: Set value to `true` to enable scheduled updates.
+  app_id:
+    description: GitHub app id.
+    default: 'false'
+  app_pem:
+    description: GitHub app PEM.
+    default: 'false'
+  personal_access_token:
+    description: GitHub access token.
     default: 'false'
 
 runs:
   using: composite
   steps:
-    - id: check-skip-schedule
-      env:
-        SCHEDULED_UPDATE: ${{ github.event_name == 'schedule' }}
-        SCHEDULED_UPDATES_ENABLED: ${{ inputs.scheduled_updates_enabled }}
-      shell: sh
-      run: |
-        if [ "$SCHEDULED_UPDATE" = "true" ] && [ "$SCHEDULED_UPDATES_ENABLED" != "true" ]; then
-          echo "should-skip-schedule=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "should-skip-schedule=false" >> "$GITHUB_OUTPUT"
-        fi    
+    - id: generate-token
+      name: Generate token
+      uses: nedix/actions/update-dependencies/01-generate-token@main
+      with:
+        personal_access_token: ${{ inputs.personal_access_token }}
+        app_id: ${{ inputs.app_id }}
+        app_pem: ${{ inputs.app_pem }}
+      continue-on-error: true
 
-    - if: |
-        steps.check-skip-schedule.outputs.should-skip-schedule == 'false'
-        && contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
-        || github.event.pull_request.merged == true
+    - if: | 
+        steps.generate-token.outcome == 'success'
+        && (
+            contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
+            || github.event.pull_request.merged == true
+        )
       id: renovate
       name: Renovate
-      uses: nedix/actions/update-dependencies/01-renovate@main
+      uses: nedix/actions/update-dependencies/02-renovate@main
       with:
-        token: ${{ github.token }}
+        token: ${{ steps.generate-token.outputs.token }}
 
     - if: |
-        github.event.pull_request.merged == true
+        steps.generate-token.outcome == 'success'
+        && github.event.pull_request.merged == true
         && steps.renovate.outputs.made_changes == 'false'
       id: update-version
       name: Update version
-      uses: nedix/actions/update-dependencies/02-update-version@main
+      uses: nedix/actions/update-dependencies/03-update-version@main
       with:
-        token: ${{ github.token }}
+        token: ${{ steps.generate-token.outputs.token }}
