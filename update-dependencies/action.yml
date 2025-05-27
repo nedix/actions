@@ -15,9 +15,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - id: generate-token
-      name: Generate token
-      uses: nedix/actions/update-dependencies/01-generate-token@main
+    - id: prepare-token
+      name: Prepare token
+      uses: nedix/actions/update-dependencies/01-prepare-token@main
       with:
         app_id: ${{ inputs.app_id }}
         app_pem: ${{ inputs.app_pem }}
@@ -25,7 +25,7 @@ runs:
       continue-on-error: true
 
     - if: | 
-        steps.generate-token.outputs.token != ''
+        steps.prepare-token.outputs.token != ''
         && (
             contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
             || github.event.pull_request.merged == true
@@ -34,14 +34,14 @@ runs:
       name: Renovate
       uses: nedix/actions/update-dependencies/02-renovate@main
       with:
-        token: ${{ steps.generate-token.outputs.token }}
+        token: ${{ steps.prepare-token.outputs.token }}
 
     - if: |
-        steps.generate-token.outputs.token != ''
+        steps.prepare-token.outputs.token != ''
         && github.event.pull_request.merged == true
         && steps.renovate.outputs.made_changes == 'false'
       id: update-version
       name: Update version
       uses: nedix/actions/update-dependencies/03-update-version@main
       with:
-        token: ${{ steps.generate-token.outputs.token }}
+        token: ${{ steps.prepare-token.outputs.token }}
