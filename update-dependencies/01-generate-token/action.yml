@@ -28,9 +28,3 @@ runs:
         app_id: ${{ inputs.app_id }}
         private_key: ${{ inputs.app_pem }}
         repositories: ${{ toJSON(github.repository) }}
-      continue-on-error: true
-
-    - if: steps.generate-token.conclusion != 'success' && inputs.personal_access_token == 'false'
-      id: check-token
-      shell: sh
-      run: exit 1
