@@ -30,7 +30,7 @@ runs:
         repositories: ${{ toJSON(github.repository) }}
       continue-on-error: true
 
-    - if: steps.generate-token.outcome != 'success' && inputs.personal_access_token == 'false'
+    - if: steps.generate-token.conclusion != 'success' && inputs.personal_access_token == 'false'
       id: check-token
       shell: sh
       run: exit 1
