@@ -4,13 +4,13 @@ description: Update dependencies with Renovate.
 inputs:
   app_id:
     description: GitHub app id.
-    required: false
+    default: ''
   app_pem:
     description: GitHub app PEM.
-    required: false
+    default: ''
   personal_access_token:
     description: GitHub access token.
-    required: false
+    default: ''
 
 runs:
   using: composite

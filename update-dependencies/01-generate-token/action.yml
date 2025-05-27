@@ -4,13 +4,13 @@ description: '# TODO'
 inputs:
   app_id:
     description: GitHub app id.
-    default: 'false'
+    required: false
   app_pem:
     description: GitHub app PEM.
-    default: 'false'
+    required: false
   personal_access_token:
     description: GitHub access token.
-    default: 'false'
+    required: false
 
 outputs:
   token:
@@ -20,7 +20,7 @@ outputs:
 runs:
   using: composite
   steps:
-    - if: inputs.app_id != 'false' && inputs.app_pem != 'false'
+    - if: inputs.app_id != '' && inputs.app_pem != ''
       id: generate-token
       name: Generate GitHub app token
       uses: tibdex/github-app-token@v2.1.0
