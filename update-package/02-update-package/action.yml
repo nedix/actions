@@ -89,7 +89,7 @@ runs:
     - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
       id: build-and-push
       name: Build and push
-      uses: docker/build-push-action@v6
+      uses: docker/build-push-action@v6.18.0
       with:
         cache-from: |
           type=registry,ref=${{ format('{0}/{1}:{2}', 'ghcr.io', github.repository, 'cache') }}
@@ -108,7 +108,7 @@ runs:
     - if: steps.build-and-push.conclusion == 'success'
       id: extract-sbom
       name: Extract SBOM
-      uses: docker/scout-action@v1
+      uses: docker/scout-action@v1.18.1
       with:
         command: cves,sbom
         format: spdx
