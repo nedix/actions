@@ -19,9 +19,9 @@ runs:
       name: Generate token
       uses: nedix/actions/update-dependencies/01-generate-token@main
       with:
-        personal_access_token: ${{ inputs.personal_access_token }}
         app_id: ${{ inputs.app_id }}
         app_pem: ${{ inputs.app_pem }}
+        personal_access_token: ${{ inputs.personal_access_token }}
       continue-on-error: true
 
     - if: | 
