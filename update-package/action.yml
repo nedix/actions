@@ -16,13 +16,13 @@ inputs:
     default: 'ghcr.io'
   registry_path:
     description: Path on the registry where to push the package.
-    default: ${{ github.repository }}
+    required: false
   registry_username:
     description: Username for the package registry.
-    default: ${{ github.actor }}
+    required: false
   registry_password:
     description: Password for the package registry.
-    default: ${{ github.token }}
+    required: false
   tags:
     description: List of tags.
     required: true
@@ -52,10 +52,10 @@ runs:
         context: ${{ inputs.context }}
         file: ${{ inputs.file }}
         platforms: ${{ inputs.platforms }}
-        registry: ${{ inputs.registry }}
-        registry_path: ${{ inputs.registry_path }}
-        registry_username: ${{ inputs.registry_username }}
-        registry_password: ${{ inputs.registry_password }}
+        registry: ${{ inputs.registry || 'ghcr.io' }}
+        registry_path: ${{ inputs.registry_path || github.repository }}
+        registry_username: ${{ inputs.registry_username || github.actor }}
+        registry_password: ${{ inputs.registry_password || github.token }}
         tags: ${{ inputs.tags }}
 
     - if: inputs.registry == 'docker.io'
