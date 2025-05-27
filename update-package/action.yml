@@ -6,14 +6,14 @@ inputs:
     description: Path or URL pointing to a set of files.
     default: '.'
   file:
-    description: Name of the Containerfile(Dockerfile).
+    description: Name of the Containerfile (Dockerfile).
     default: 'auto'
   platforms:
     description: Comma-separated list of platform architectures.
     required: true
   registry:
     description: Name of the package registry.
-    default: 'ghcr.io'
+    required: false
   registry_path:
     description: Path on the registry where to push the package.
     required: false
