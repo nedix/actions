@@ -13,16 +13,16 @@ inputs:
     required: true
   registry:
     description: Name of the package registry.
-    required: true
+    default: 'ghcr.io'
   registry_path:
     description: Path on the registry where to push the package.
-    required: true
+    default: ${{ github.repository }}
   registry_username:
     description: Username for the package registry.
-    required: true
+    default: ${{ github.actor }}
   registry_password:
     description: Password for the package registry.
-    required: true
+    default: ${{ github.token }}
   tags:
     description: List of tags.
     required: true
@@ -44,7 +44,7 @@ runs:
       uses: nedix/actions/update-package/01-check-version-tag@main
       continue-on-error: true
 
-    - if: steps.check-version-tag.outcome == 'success'
+    - if: steps.check-version-tag.conclusion == 'success'
       id: update-package
       name: Update package
       uses: nedix/actions/update-package/02-update-package@main

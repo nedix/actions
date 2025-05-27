@@ -3,7 +3,7 @@ description: Perform automatic dependency updates.
 
 inputs:
   token:
-    description: GitHub app token.
+    description: GitHub token.
     required: true
 
 outputs:

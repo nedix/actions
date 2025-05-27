@@ -10,9 +10,6 @@ on:
     - cron: '0 */6 * * *'
   workflow_dispatch:
 
-env:
-  SCHEDULED_UPDATES_ENABLED: 'false'
-
 jobs:
   update-dependencies:
     name: Update dependencies
@@ -22,4 +19,6 @@ jobs:
         name: Update dependencies
         uses: nedix/actions/update-dependencies@main
         with:
-          scheduled_updates_enabled: "$SCHEDULED_UPDATES_ENABLED"
+          app_id: ${{ secrets.GH_APP_ID }}
+          app_pem: ${{ secrets.GH_APP_PEM }}
+          personal_access_token: ${{ secrets.GH_PAT }}
