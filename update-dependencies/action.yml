@@ -15,7 +15,7 @@ runs:
         SCHEDULED_UPDATES_ENABLED: ${{ inputs.scheduled_updates_enabled }}
       shell: sh
       run: |
-        if [ "$SCHEDULED_UPDATE" == "true" ] && [ "$SCHEDULED_UPDATES_ENABLED" != "true" ]; then
+        if [ "$SCHEDULED_UPDATE" = "true" ] && [ "$SCHEDULED_UPDATES_ENABLED" != "true" ]; then
           echo "should-skip-schedule=true" >> "$GITHUB_OUTPUT"
         else
           echo "should-skip-schedule=false" >> "$GITHUB_OUTPUT"
