@@ -61,7 +61,7 @@ runs:
     - if: inputs.registry == 'docker.io'
       id: update-docker-hub-information
       name: Update Docker Hub information
-      uses: peter-evans/dockerhub-description@v4.0.2
+      uses: nedix/actions/update-package/03-update-docker-hub@main
       with:
         repository: ${{ inputs.registry_path }}
         username: ${{ inputs.registry_username }}

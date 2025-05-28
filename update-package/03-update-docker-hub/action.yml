@@ -1,0 +1,34 @@
+name: Update Docker hub
+
+inputs:
+  registry_path:
+    description: Path on the registry where to push the package.
+    required: true
+  registry_username:
+    description: Username for the package registry.
+    required: true
+  registry_password:
+    description: Password for the package registry.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - id: prepare-readme
+      name: Prepare readme document
+      shell: sh
+      run: |
+        cat README.md \
+          | sed -e 's|(\[project\]: ).*|\1https://github.com/${{ github.event.repository.full_name }}|' \
+          > README.docker-hub.md
+
+    - id: update-docker-hub-description
+      name: Update Docker Hub description
+      uses: peter-evans/dockerhub-description@v4.0.2
+      with:
+        enable-url-completion: true
+        password: ${{ inputs.registry_password }}
+        readme-filepath: README.docker-hub.md
+        repository: ${{ inputs.registry_path }}
+        short-description: ${{ github.event.repository.description }}
+        username: ${{ inputs.registry_username }}
