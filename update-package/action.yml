@@ -63,8 +63,8 @@ runs:
       name: Update Docker Hub information
       uses: nedix/actions/update-package/03-update-docker-hub@main
       with:
-        repository: ${{ inputs.registry_path }}
-        username: ${{ inputs.registry_username }}
-        password: ${{ inputs.registry_password }}
+        registry_path: ${{ inputs.registry_path }}
+        registry_username: ${{ inputs.registry_username }}
+        registry_password: ${{ inputs.registry_password }}
         enable-url-completion: true
         short-description: ${{ github.event.repository.description }}
