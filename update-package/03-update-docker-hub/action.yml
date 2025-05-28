@@ -19,7 +19,7 @@ runs:
       shell: sh
       run: |
         cat README.md \
-          | sed -e 's|(\[project\]: ).*|\1https://github.com/${{ github.event.repository.full_name }}|' \
+          | sed -E "s|(\[project\]: ).*|\1https://github.com/${{ github.event.repository.full_name }}|" \
           > README.docker-hub.md
 
     - id: update-docker-hub-description
