@@ -58,17 +58,6 @@ runs:
         registry_password: ${{ inputs.registry_password || github.token }}
         tags: ${{ inputs.tags }}
 
-#    - if: inputs.registry == 'docker.io'
-#      id: update-docker-hub-information
-#      name: Update Docker Hub information
-#      uses: peter-evans/dockerhub-description@v4.0.2
-#      with:
-#        repository: ${{ inputs.registry_path }}
-#        username: ${{ inputs.registry_username }}
-#        password: ${{ inputs.registry_password }}
-#        enable-url-completion: true
-#        short-description: ${{ github.event.repository.description }}
-
     - if: inputs.registry == 'docker.io'
       id: update-docker-hub-information
       name: Update Docker Hub information

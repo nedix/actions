@@ -119,16 +119,16 @@ runs:
     - if: steps.extract-sbom.conclusion == 'success'
       id: attest-sbom
       name: Attest SBOM
-      continue-on-error: true
       uses: actions/attest-sbom@v2.2.0
       with:
         sbom-path: sbom.spdx.json
         subject-path: ${{ github.workspace }}
+      continue-on-error: true
 
     - if: steps.extract-sbom.conclusion == 'success'
       id: upload-sarif
       name: Upload SARIF
-      continue-on-error: true
       uses: github/codeql-action/upload-sarif@v3.28.18
       with:
         sarif_file: sarif.output.json
+      continue-on-error: true
