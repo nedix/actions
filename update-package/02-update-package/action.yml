@@ -128,7 +128,7 @@ runs:
     - if: steps.extract-sbom.conclusion == 'success'
       id: upload-sarif
       name: Upload SARIF
-      uses: github/codeql-action/upload-sarif@v3.28.18
+      uses: github/codeql-action/upload-sarif@v3.28.19
       with:
         sarif_file: sarif.output.json
       continue-on-error: true
