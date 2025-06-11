@@ -119,7 +119,7 @@ runs:
     - if: steps.extract-sbom.conclusion == 'success'
       id: attest-sbom
       name: Attest SBOM
-      uses: actions/attest-sbom@v2.2.0
+      uses: actions/attest-sbom@v2.4.0
       with:
         sbom-path: sbom.spdx.json
         subject-path: ${{ github.workspace }}
