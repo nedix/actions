@@ -3,10 +3,10 @@ name: Update package
 inputs:
   context:
     description: Path pointing to a set of files.
-    default: '.'
+    required: true
   file:
     description: Name of the Containerfile(Dockerfile).
-    default: 'auto'
+    required: true
   platforms:
     description: Comma-separated list of platform architectures.
     required: true

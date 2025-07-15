@@ -10,22 +10,22 @@ inputs:
     default: 'auto'
   platforms:
     description: Comma-separated list of platform architectures.
-    required: true
+    default: 'linux/amd64'
   registry:
     description: Name of the package registry.
-    required: false
+    default: 'ghcr.io'
   registry_path:
     description: Path on the registry where to push the package.
-    required: false
+    default: ${{ github.repository }}
   registry_username:
     description: Username for the package registry.
-    required: false
+    default: ${{ github.actor }}
   registry_password:
     description: Password for the package registry.
-    required: false
+    default: ${{ github.token }}
   tags:
     description: List of tags.
-    required: true
+    default: ''
   enable_short_sha:
     description: Enable the short sha package tag.
     default: 'true'
@@ -53,9 +53,9 @@ runs:
         file: ${{ inputs.file }}
         platforms: ${{ inputs.platforms }}
         registry: ${{ inputs.registry || 'ghcr.io' }}
-        registry_path: ${{ inputs.registry_path || github.repository }}
-        registry_username: ${{ inputs.registry_username || github.actor }}
-        registry_password: ${{ inputs.registry_password || github.token }}
+        registry_path: ${{ inputs.registry_path }}
+        registry_username: ${{ inputs.registry_username }}
+        registry_password: ${{ inputs.registry_password }}
         tags: ${{ inputs.tags }}
 
     - if: inputs.registry == 'docker.io'
