@@ -34,6 +34,9 @@ inputs:
   enable_latest_tag:
     description: Enable the latest package tag.
     default: 'true'
+  enable_cache:
+    description: Enable package cache.
+    default: 'false'
 
 runs:
   using: composite
@@ -91,10 +94,8 @@ runs:
       name: Build and push
       uses: docker/build-push-action@v6.18.0
       with:
-        cache-from: |
-          type=registry,ref=${{ format('{0}/{1}:{2}', 'ghcr.io', github.repository, 'cache') }}
-        cache-to: |
-          type=registry,ref=${{ format('{0}/{1}:{2}', 'ghcr.io', github.repository, 'cache') }},mode=max
+        cache-from: ${{ inputs.enable_cache == 'true' && format('{0}={1}/{2}:{3}', 'type=registry,ref', 'ghcr.io', github.repository, 'cache') }}
+        cache-to: ${{ inputs.enable_cache == 'true' && format('{0}={1}/{2}:{3},{4}', 'type=registry,ref', 'ghcr.io', github.repository, 'cache', 'mode=max') }}
         context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}

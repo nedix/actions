@@ -35,6 +35,9 @@ inputs:
   enable_latest_tag:
     description: Enable the latest package tag.
     default: 'true'
+  enable_cache:
+    description: Enable package cache.
+    default: 'false'
 
 runs:
   using: composite
