@@ -8,7 +8,7 @@ inputs:
     description: Name of the Containerfile(Dockerfile).
     required: true
   platforms:
-    description: Comma-separated list of platform architectures.
+    description: Comma-separated list of container architectures.
     required: true
   registry:
     description: Name of the package registry.

@@ -9,7 +9,7 @@ inputs:
     description: Name of the Containerfile (Dockerfile).
     default: 'auto'
   platforms:
-    description: Comma-separated list of platform architectures.
+    description: Comma-separated list of container architectures.
     default: 'linux/amd64'
   registry:
     description: Name of the package registry.
