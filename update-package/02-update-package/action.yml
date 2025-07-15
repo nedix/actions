@@ -25,6 +25,9 @@ inputs:
   tags:
     description: List of tags.
     required: true
+  target:
+    description: Container target.
+    required: true
   enable_short_sha:
     description: Enable the short sha package tag.
     default: 'true'
@@ -105,6 +108,7 @@ runs:
           ${{ inputs.enable_short_sha == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.short_sha) }}
           ${{ inputs.enable_version_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.version_tag) }}
           ${{ inputs.tags }}
+        target: ${{ input.target }}
 
     - if: steps.build-and-push.conclusion == 'success'
       id: extract-sbom

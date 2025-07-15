@@ -26,6 +26,9 @@ inputs:
   tags:
     description: List of tags.
     default: ''
+  target:
+    description: Container target.
+    default: ''
   enable_short_sha:
     description: Enable the short sha package tag.
     default: 'true'
