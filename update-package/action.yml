@@ -38,7 +38,7 @@ inputs:
   enable_latest_tag:
     description: Enable the latest package tag.
     default: 'true'
-  enable_short_sha:
+  enable_short_sha_tag:
     description: Enable the short sha package tag.
     default: 'true'
   enable_version_tag:
@@ -72,7 +72,7 @@ runs:
         tags: ${{ inputs.tags }}
         enable_cache: ${{ inputs.enable_cache }}
         enable_latest_tag: ${{ inputs.enable_latest_tag }}
-        enable_short_sha: ${{ inputs.enable_short_sha }}
+        enable_short_sha_tag: ${{ inputs.enable_short_sha_tag }}
         enable_version_tag: ${{ inputs.enable_version_tag }}
 
     - if: inputs.enable_docker_hub_information == 'true' && inputs.registry == 'docker.io'

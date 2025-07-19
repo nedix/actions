@@ -37,7 +37,7 @@ inputs:
   enable_latest_tag:
     description: Enable the latest package tag.
     required: true
-  enable_short_sha:
+  enable_short_sha_tag:
     description: Enable the short sha package tag.
     required: true
   enable_version_tag:
@@ -78,18 +78,6 @@ runs:
         fetch-depth: 0
         ref: ${{ github.event.repository.default_branch }}
 
-    - id: prepare-tags
-      name: Prepare tags
-      shell: sh
-      run: |
-        echo "short_sha=$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
-        echo "version_tag=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
-        tags=""
-        for tag in ${{ inputs.tags }}; do
-          tags+="${{ inputs.registry }}/${{ inputs.registry_path }}:$tag"$'\n'
-        done
-        echo "tags=${tags}" >> $GITHUB_OUTPUT
-
     - if: inputs.file == 'auto'
       id: find-containerfile
       name: Find containerfile
@@ -99,6 +87,19 @@ runs:
         test -f Containerfile && echo "file=Containerfile" >> $GITHUB_OUTPUT && exit 0
         test -f Dockerfile && echo "file=Dockerfile" >> $GITHUB_OUTPUT && exit 0
         echo "Failed to find a containerfile within the given context path." && echo "file=none" >> $GITHUB_OUTPUT
+
+    - id: prepare-tags
+      name: Prepare tags
+      shell: sh
+      run: |
+        echo "latest_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:latest"
+        echo "short_sha_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
+        echo "version_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+        tags=""
+        for tag in ${{ inputs.tags }}; do
+          tags+="${{ inputs.registry }}/${{ inputs.registry_path }}:$tag"$'\n'
+        done
+        echo "tags=${tags}" >> $GITHUB_OUTPUT
 
     - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
       id: build-and-push
@@ -113,9 +114,9 @@ runs:
         platforms: ${{ inputs.platforms }}
         push: true
         tags: |
-          ${{ inputs.enable_latest_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, 'latest') }}
-          ${{ inputs.enable_short_sha == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.short_sha) }}
-          ${{ inputs.enable_version_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.version_tag) }}
+          ${{ inputs.enable_latest_tag == 'true' && steps.prepare-tags.outputs.latest_tag }}
+          ${{ inputs.enable_short_sha_tag == 'true'  && steps.prepare-tags.outputs.short_sha_tag }}
+          ${{ inputs.enable_version_tag == 'true' && steps.prepare-tags.outputs.version_tag }}
           ${{ steps.prepare-tags.outputs.tags }}
         target: ${{ inputs.target }}
 
