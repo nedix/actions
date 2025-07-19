@@ -96,7 +96,7 @@ runs:
         echo "short_sha_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
         echo "version_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
         tags=""
-        for tag in ${{ inputs.tags }}; do
+        for tag in "${{ inputs.tags }}"; do
           tags+="${{ inputs.registry }}/${{ inputs.registry_path }}:$tag"$'\n'
         done
         echo "tags=${tags}" >> $GITHUB_OUTPUT
