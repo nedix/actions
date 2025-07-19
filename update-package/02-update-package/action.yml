@@ -84,6 +84,11 @@ runs:
       run: |
         echo "short_sha=$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
         echo "version_tag=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+        tags=""
+        for tag in ${{ inputs.tags }}; do
+          tags+="${{ inputs.registry }}/${{ inputs.registry_path }}:$tag"$'\n'
+        done
+        echo "tags=${tags}" >> $GITHUB_OUTPUT
 
     - if: inputs.file == 'auto'
       id: find-containerfile
@@ -111,7 +116,7 @@ runs:
           ${{ inputs.enable_latest_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, 'latest') }}
           ${{ inputs.enable_short_sha == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.short_sha) }}
           ${{ inputs.enable_version_tag == 'true' && format('{0}/{1}:{2}', inputs.registry, inputs.registry_path, steps.prepare-tags.outputs.version_tag) }}
-          ${{ inputs.tags }}
+          ${{ steps.prepare-tags.outputs.tags }}
         target: ${{ inputs.target }}
 
     - if: steps.build-and-push.conclusion == 'success'
