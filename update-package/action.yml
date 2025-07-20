@@ -16,16 +16,16 @@ inputs:
     default: 'linux/amd64'
   registry:
     description: Name of the package registry.
-    default: 'ghcr.io'
+    required: true
   registry_path:
     description: Path on the registry where to push the package.
-    default: ${{ github.repository }}
+    required: true
   registry_username:
     description: Username for the package registry.
-    default: ${{ github.actor }}
+    required: true
   registry_password:
     description: Password for the package registry.
-    default: ${{ github.token }}
+    required: true
   tags:
     description: List of tags.
     default: ''
