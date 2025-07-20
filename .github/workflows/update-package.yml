@@ -19,13 +19,13 @@ jobs:
         name: Update package
         uses: nedix/actions/update-package@main
         env:
-          registry: ${{ secrets.REGISTRY_DOMAIN }}
-          registry_path: ${{ secrets.REGISTRY_PATH }}
-          registry_username: ${{ secrets.REGISTRY_USERNAME }}
-          registry_password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry_secret: ${{ secrets.REGISTRY_DOMAIN }}
+          registry_path_secret: ${{ secrets.REGISTRY_PATH }}
+          registry_username_secret: ${{ secrets.REGISTRY_USERNAME }}
+          registry_password_secret: ${{ secrets.REGISTRY_PASSWORD }}
         with:
-          platforms: linux/amd64,linux/arm64/v8
-          registry: ${{ env.registry || 'ghcr.io' }}
-          registry_path: ${{ env.registry_path || github.repository }}
-          registry_username: ${{ env.registry_username || github.actor }}
-          registry_password: ${{ env.registry_password || github.token }}
+          platforms: 'linux/amd64,linux/arm64/v8'
+          registry: ${{ env.registry_secret || 'ghcr.io' }}
+          registry_path: ${{ env.registry_path_secret || github.repository }}
+          registry_username: ${{ env.registry_username_secret || github.actor }}
+          registry_password: ${{ env.registry_password_secret || github.token }}
