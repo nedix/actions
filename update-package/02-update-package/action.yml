@@ -97,7 +97,7 @@ runs:
         echo "version_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
         tags=""
         for tag in "${{ inputs.tags }}"; do
-          tags+="${{ format('\n{0}/{1}', inputs.registry, inputs.registry_path) }}:${tag}"
+          tags+="${{ format('\n{0}/{1}:', inputs.registry, inputs.registry_path) }}${tag}"
         done
         echo "tags=${tags}" >> $GITHUB_OUTPUT
 
