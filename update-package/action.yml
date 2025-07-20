@@ -16,16 +16,16 @@ inputs:
     default: 'linux/amd64'
   registry:
     description: Name of the package registry.
-    default: 'ghcr.io'
+    default: ${{ secrets.REGISTRY_DOMAIN || 'ghcr.io' }}
   registry_path:
     description: Path on the registry where to push the package.
-    default: ${{ github.repository }}
+    default: ${{ secrets.REGISTRY_PATH || github.repository }}
   registry_username:
     description: Username for the package registry.
-    default: ${{ github.actor }}
+    default: ${{ secrets.REGISTRY_USERNAME || github.actor }}
   registry_password:
     description: Password for the package registry.
-    default: ${{ github.token }}
+    default: ${{ secrets.REGISTRY_PASSWORD || github.token }}
   tags:
     description: List of tags.
     default: ''
