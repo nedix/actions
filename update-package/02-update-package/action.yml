@@ -114,9 +114,9 @@ runs:
         platforms: ${{ inputs.platforms }}
         push: true
         tags: |
-          ${{ inputs.enable_latest_tag == 'true' && steps.prepare-tags.outputs.latest_tag || null }}
-          ${{ inputs.enable_short_sha_tag == 'true' && steps.prepare-tags.outputs.short_sha_tag || null }}
-          ${{ inputs.enable_version_tag == 'true' && steps.prepare-tags.outputs.version_tag || null }}
+          ${{ inputs.enable_latest_tag == 'true' && steps.prepare-tags.outputs.latest_tag || '' }}
+          ${{ inputs.enable_short_sha_tag == 'true' && steps.prepare-tags.outputs.short_sha_tag || '' }}
+          ${{ inputs.enable_version_tag == 'true' && steps.prepare-tags.outputs.version_tag || '' }}
           ${{ steps.prepare-tags.outputs.tags }}
         target: ${{ inputs.target }}
 
