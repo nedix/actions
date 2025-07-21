@@ -123,7 +123,7 @@ runs:
     - if: inputs.registry == 'docker.io' && steps.build-and-push.conclusion == 'success'
       id: extract-sbom
       name: Extract SBOM
-      uses: docker/scout-action@v1.18.1
+      uses: docker/scout-action@v1.18.2
       with:
         command: cves,sbom
         format: spdx
