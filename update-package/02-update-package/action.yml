@@ -95,11 +95,11 @@ runs:
         echo "latest_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:latest" >> $GITHUB_OUTPUT
         echo "short_sha_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
         echo "version_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
-#        tags=""
-#        for tag in "${{ inputs.tags }}"; do
-#          tags+="${{ inputs.registry }}/${{ inputs.registry_path }}:${tag}\n"
-#        done
-#        echo -e "tags=${tags}" >> $GITHUB_OUTPUT
+        tags=""
+        for tag in "${{ inputs.tags }}"; do
+          tags+="${{ inputs.registry }}/${{ inputs.registry_path }}:${tag}\n"
+        done
+        echo -e "tags=${tags}" >> $GITHUB_OUTPUT
 
     - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
       id: build-and-push
