@@ -49,7 +49,7 @@ runs:
   steps:
     - id: registry-login
       name: Login to package registry
-      uses: docker/login-action@v3.5.0
+      uses: docker/login-action@v3.6.0
       with:
         registry: ${{ inputs.registry }}
         username: ${{ inputs.registry_username }}
@@ -57,7 +57,7 @@ runs:
 
     - id: cache-registry-login
       name: Login to cache package registry
-      uses: docker/login-action@v3.5.0
+      uses: docker/login-action@v3.6.0
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
