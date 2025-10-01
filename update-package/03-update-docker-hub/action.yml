@@ -24,7 +24,7 @@ runs:
 
     - id: update-docker-hub-description
       name: Update Docker Hub description
-      uses: peter-evans/dockerhub-description@v4.0.2
+      uses: peter-evans/dockerhub-description@v5.0.0
       with:
         enable-url-completion: true
         password: ${{ inputs.registry_password }}
