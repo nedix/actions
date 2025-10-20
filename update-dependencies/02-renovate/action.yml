@@ -38,7 +38,7 @@ runs:
     - if: steps.skip-duplicate-actions.outputs.should_skip != 'true'
       id: renovate-dependencies
       name: Renovate dependencies
-      uses: renovatebot/github-action@v43.0.17
+      uses: renovatebot/github-action@v43.0.18
       env:
         LOG_LEVEL: debug
         RENOVATE_AUTODISCOVER: true
