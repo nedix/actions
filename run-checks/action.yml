@@ -11,7 +11,7 @@ runs:
   steps:
     - id: checkout-code
       name: Checkout code
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         ref: ${{ github.head_ref || github.ref_name }}
         fetch-depth: 0
