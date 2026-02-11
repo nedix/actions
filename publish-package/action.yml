@@ -1,4 +1,4 @@
-name: Update package
+name: Publish package
 description: Build and push a new package when a tag has been pushed.
 
 inputs:
@@ -53,13 +53,13 @@ runs:
   steps:
     - id: check-version-tag
       name: Check version tag
-      uses: nedix/actions/update-package/01-check-version-tag@main
+      uses: nedix/actions/publish-package/01-check-version-tag@main
       continue-on-error: true
 
     - if: steps.check-version-tag.conclusion == 'success'
-      id: update-package
+      id: publish-package
       name: Update package
-      uses: nedix/actions/update-package/02-update-package@main
+      uses: nedix/actions/publish-package/02-publish-package@main
       with:
         build_arguments: ${{ inputs.build_arguments }}
         context: ${{ inputs.context }}
@@ -78,7 +78,7 @@ runs:
     - if: inputs.registry == 'docker.io' && inputs.enable_docker_hub_information == 'true'
       id: update-docker-hub-information
       name: Update Docker Hub information
-      uses: nedix/actions/update-package/03-update-docker-hub@main
+      uses: nedix/actions/publish-package/03-update-docker-hub@main
       with:
         registry_path: ${{ inputs.registry_path }}
         registry_username: ${{ inputs.registry_username }}
