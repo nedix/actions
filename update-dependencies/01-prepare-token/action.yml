@@ -9,19 +9,19 @@ inputs:
     description: GitHub app PEM.
     required: false
   personal_access_token:
-    description: GitHub access token.
+    description: GitHub personal access token.
     required: false
 
 outputs:
   token:
     description: The GitHub token that will be used with Renovate to manage the dependency updates.
-    value: ${{ steps.generate-token.conclusion == 'success' && steps.generate-token.outputs.token || inputs.personal_access_token }}
+    value: ${{ steps.generate-app-token.conclusion == 'success' && steps.generate-app-token.outputs.token || inputs.personal_access_token }}
 
 runs:
   using: composite
   steps:
     - if: inputs.app_id != '' && inputs.app_pem != ''
-      id: generate-token
+      id: generate-app-token
       name: Generate GitHub app token
       uses: tibdex/github-app-token@v2.1.0
       with:

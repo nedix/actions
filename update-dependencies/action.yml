@@ -9,7 +9,7 @@ inputs:
     description: GitHub app PEM.
     required: false
   personal_access_token:
-    description: GitHub access token.
+    description: GitHub personal access token.
     required: false
 
 runs:

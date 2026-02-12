@@ -3,7 +3,7 @@ description: Increment the version tag.
 
 inputs:
   token:
-    description: GitHub app token.
+    description: GitHub token.
     required: true
 
 runs:
