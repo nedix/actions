@@ -104,7 +104,7 @@ runs:
     - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
       id: build-and-push
       name: Build and push
-      uses: docker/build-push-action@v6.19.1
+      uses: docker/build-push-action@v6.19.2
       with:
         build-args: ${{ inputs.build_arguments }}
 #        cache-from: ${{ inputs.enable_cache == 'true' && format('{0}={1}/{2}:{3}', 'type=registry,ref', 'ghcr.io', github.repository, 'cache') || null }}
