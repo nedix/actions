@@ -22,14 +22,10 @@ runs:
         app_id: ${{ inputs.app_id }}
         app_pem: ${{ inputs.app_pem }}
         personal_access_token: ${{ inputs.personal_access_token }}
-      continue-on-error: true
 
     - if: | 
-        steps.prepare-token.outputs.token != ''
-        && (
-            contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
-            || github.event.pull_request.merged == true
-        )
+        contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)
+        || github.event.pull_request.merged == true
       id: renovate
       name: Renovate
       uses: nedix/actions/update-dependencies/02-renovate@main
@@ -37,8 +33,7 @@ runs:
         token: ${{ steps.prepare-token.outputs.token }}
 
     - if: |
-        steps.prepare-token.outputs.token != ''
-        && github.event.pull_request.merged == true
+        github.event.pull_request.merged == true
         && steps.renovate.outputs.made_changes == 'false'
       id: update-version
       name: Update version
