@@ -1,0 +1,43 @@
+name: Activate workflows
+description: Activate other workflows and keep self active.
+
+inputs:
+  app_id:
+    description: GitHub app id.
+    required: false
+  app_pem:
+    description: GitHub app PEM.
+    required: false
+  personal_access_token:
+    description: GitHub personal access token.
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - id: prepare-token
+      name: Prepare token
+      uses: nedix/actions/activate-workflows/01-prepare-token@main
+      with:
+        app_id: ${{ inputs.app_id }}
+        app_pem: ${{ inputs.app_pem }}
+        personal_access_token: ${{ inputs.personal_access_token }}
+
+    - id: list-inactive-workflows
+      name: List inactive workflows
+      uses: nedix/actions/activate-workflows/02-list-inactive-workflows@main
+      with:
+        token: ${{ steps.prepare-token.outputs.token }}
+
+    - id: activate-workflows
+      name: Activate workflows
+      uses: nedix/actions/activate-workflows/03-activate-workflows@main
+      with:
+        token: ${{ steps.prepare-token.outputs.token }}
+        workflows: ${{ steps.list-inactive-workflows.outputs.workflows }}
+
+    - id: keep-self-active
+      name: Keep self active
+      uses: nedix/actions/activate-workflows/04-keep-self-active@main
+      with:
+        token: ${{ steps.prepare-token.outputs.token }}

@@ -1,0 +1,24 @@
+name: List inactive workflows
+description: List and filter workflows that are inactive.
+
+inputs:
+  token:
+    description: GitHub token.
+    required: true
+
+outputs:
+  workflows:
+    description: JSON list of workflows.
+    value: ${{ steps.list-inactive-workflows.outputs.workflows }}
+
+runs:
+  using: composite
+  steps:
+    - id: list-inactive-workflows
+      name: List inactive workflows
+      shell: sh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        WORKFLOWS=$(gh workflow list --all --jq 'map(select(.state == "disabled_inactivity"))')
+        echo "workflows=${WORKFLOWS}" >> $GITHUB_OUTPUT

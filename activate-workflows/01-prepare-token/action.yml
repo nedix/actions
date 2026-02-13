@@ -1,0 +1,30 @@
+name: Prepare token
+description: Prepare token for authentication with the GitHub CLI.
+
+inputs:
+  app_id:
+    description: GitHub app id.
+    required: false
+  app_pem:
+    description: GitHub app PEM.
+    required: false
+  personal_access_token:
+    description: GitHub personal access token.
+    required: false
+
+outputs:
+  token:
+    description: GitHub token.
+    value: ${{ steps.generate-app-token.conclusion == 'success' && steps.generate-app-token.outputs.token || inputs.personal_access_token }}
+
+runs:
+  using: composite
+  steps:
+    - if: inputs.app_id != '' && inputs.app_pem != ''
+      id: generate-app-token
+      name: Generate GitHub app token
+      uses: tibdex/github-app-token@v2.1.0
+      with:
+        app_id: ${{ inputs.app_id }}
+        private_key: ${{ inputs.app_pem }}
+        repositories: ${{ toJSON(github.repository) }}

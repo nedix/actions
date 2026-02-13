@@ -1,0 +1,42 @@
+name: Keep self active
+description: Prevent timeout of the `activate-workflows` workflow.
+
+inputs:
+  token:
+    description: GitHub token.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - id: checkout-code
+      uses: actions/checkout@v6.0.2
+      with:
+        persist-credentials: true
+
+    - id: keep-self-active
+      name: Keep self active
+      shell: sh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        set -e
+
+        DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
+
+        echo "Fetching latest default branch..."
+        git fetch origin "$DEFAULT_BRANCH"
+
+        echo "Creating actions/activate-workflows branch..."
+        git checkout -b "actions/activate-workflows" "origin/${DEFAULT_BRANCH}"
+
+        echo "Creating empty commit..."
+        git commit --allow-empty -m "Keep self active"
+
+        echo "Pushing branch..."
+        git push origin "actions/activate-workflows"
+
+        echo "Deleting remote branch..."
+        git push origin --delete "actions/activate-workflows"
+
+        echo "Keep-self-active action completed."
