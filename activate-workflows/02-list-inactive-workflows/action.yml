@@ -20,5 +20,5 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.token }}
       run: |
-        WORKFLOWS=$(gh workflow list --all --jq 'map(select(.state == "disabled_inactivity"))')
+        WORKFLOWS=$(gh workflow list --all --json name --jq 'map(select(.state == "disabled_inactivity"))')
         echo "workflows=${WORKFLOWS}" >> $GITHUB_OUTPUT
