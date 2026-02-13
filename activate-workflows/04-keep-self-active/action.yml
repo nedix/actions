@@ -21,6 +21,8 @@ runs:
     - id: keep-self-active
       name: Keep self active
       shell: sh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
       run: |
         set -e
         
