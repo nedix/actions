@@ -27,9 +27,6 @@ runs:
 
         DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
 
-        echo "Fetching latest default branch..."
-        git fetch origin "$DEFAULT_BRANCH"
-
         echo "Creating actions/activate-workflows branch..."
         git checkout -b "actions/activate-workflows" "origin/${DEFAULT_BRANCH}"
 
