@@ -25,15 +25,12 @@ runs:
         GH_TOKEN: ${{ inputs.token }}
       run: |
         set -e
-        
-        gh api user
-        gh api user --jq '.id'
-        gh api user --jq '.name'
-        
-        git config --global user.name "$ACTOR_LOGIN"
-        git config --global user.email "${ACTOR_ID}+${ACTOR_LOGIN}@users.noreply.github.com"
 
         DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
+
+        echo "Configuring git..."
+        git config --global user.name "$(gh api user --jq '.name')"
+        git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq '.login')@users.noreply.github.com"
 
         echo "Creating actions/activate-workflows branch..."
         git checkout -b "actions/activate-workflows" "origin/${DEFAULT_BRANCH}"
