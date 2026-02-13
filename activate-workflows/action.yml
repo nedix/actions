@@ -33,7 +33,7 @@ runs:
       name: Activate workflows
       uses: nedix/actions/activate-workflows/03-activate-workflows@main
       with:
-        token: ${{ steps.prepare-token.outputs.token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         workflows: ${{ steps.list-inactive-workflows.outputs.workflows }}
 
     - id: keep-self-active
