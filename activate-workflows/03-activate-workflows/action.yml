@@ -18,7 +18,7 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.token }}
       run: |
-        for WORKFLOW_NAME in $(echo "${{ inputs.workflows }}" | jq -r '.[].name'); do
+        for WORKFLOW_NAME in $(echo '${{ inputs.workflows }}' | jq -r '.[].name'); do
           echo "Enabling workflow: ${WORKFLOW_NAME}"
           gh workflow enable "$WORKFLOW_NAME"
         done
