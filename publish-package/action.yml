@@ -44,9 +44,6 @@ inputs:
   enable_version_tag:
     description: Enable the semver package tag.
     default: 'true'
-  enable_docker_hub_information:
-    description: Enable updating of Docker Hub information.
-    default: 'false'
 
 runs:
   using: composite
@@ -75,7 +72,7 @@ runs:
         enable_short_sha_tag: ${{ inputs.enable_short_sha_tag }}
         enable_version_tag: ${{ inputs.enable_version_tag }}
 
-    - if: inputs.registry == 'docker.io' && inputs.enable_docker_hub_information == 'true'
+    - if: inputs.registry == 'docker.io'
       id: update-docker-hub-information
       name: Update Docker Hub information
       uses: nedix/actions/publish-package/03-update-docker-hub@main
