@@ -10,6 +10,11 @@
   ],
   packageRules: [
     {
+      description: "Customize commit and pull request titles",
+      matchPackagePatterns: [".*"],
+      commitMessageAction: "Update dependency",
+    },
+    {
       description: "Disable grouping for all dependencies",
       matchPackagePatterns: [".*"],
       groupName: null,
