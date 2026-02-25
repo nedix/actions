@@ -12,7 +12,8 @@
     {
       description: "Customize commit and pull request titles",
       matchPackagePatterns: [".*"],
-      commitMessageAction: "Update dependency",
+      commitMessageAction: "Update",
+      commitMessageTopic: "dependency {{depName}}"
     },
     {
       description: "Disable grouping for all dependencies",
