@@ -113,7 +113,7 @@ runs:
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
         push: true
-        tags: |
+        tags: >
           ${{ inputs.enable_latest_tag == 'true' && steps.prepare-tags.outputs.latest_tag || '' }}
           ${{ inputs.enable_short_sha_tag == 'true' && steps.prepare-tags.outputs.short_sha_tag || '' }}
           ${{ inputs.enable_version_tag == 'true' && steps.prepare-tags.outputs.version_tag || '' }}
