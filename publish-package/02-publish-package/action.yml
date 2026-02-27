@@ -108,7 +108,8 @@ runs:
       with:
         build-args: ${{ inputs.build_arguments }}
         cache-from: ${{ inputs.enable_cache == 'true' && 'type=gha' || '' }}
-        cache-to: ${{ inputs.enable_cache == 'true' && 'type=gha,mode=max' || '' }}context: ${{ inputs.context }}
+        cache-to: ${{ inputs.enable_cache == 'true' && 'type=gha,mode=max' || '' }}
+        context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
         push: true
