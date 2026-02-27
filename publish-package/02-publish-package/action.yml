@@ -71,7 +71,8 @@ runs:
       name: Setup Buildx
       uses: docker/setup-buildx-action@v3.12.0
 
-    - id: checkout-code
+    - if: ${{ hashFiles('.git/') != '' }}
+      id: checkout-code
       name: Checkout code
       uses: actions/checkout@v6.0.2
       with:
