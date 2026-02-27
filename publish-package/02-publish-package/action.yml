@@ -97,6 +97,7 @@ runs:
         echo "version_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
         TAGS=""
         while read -r TAG; do
+          test -z "$TAG" && continue
           TAGS+="${{ inputs.registry }}/${{ inputs.registry_path }}:${TAG}"$'\n'
         done <<< "${{ inputs.tags }}"
         echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
