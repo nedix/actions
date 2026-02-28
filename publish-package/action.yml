@@ -5,6 +5,9 @@ inputs:
   build_arguments:
     description: List of build arguments.
     default: ''
+  cache_tag:
+    description: The tag used for the cache package.
+    default: 'cache'
   context:
     description: Path or URL pointing to a set of files.
     default: '.'
@@ -59,6 +62,7 @@ runs:
       uses: nedix/actions/publish-package/02-publish-package@main
       with:
         build_arguments: ${{ inputs.build_arguments }}
+        cache_tag: ${{ inputs.cache_tag }}
         context: ${{ inputs.context }}
         file: ${{ inputs.file }}
         platforms: ${{ inputs.platforms }}
