@@ -137,9 +137,9 @@ runs:
         sarif-file: sarif.output.json
 
     - if: steps.extract-sbom.conclusion == 'success'
-      id: attest-sbom
+      id: attest
       name: Attest SBOM
-      uses: actions/attest-sbom@v4.0.0
+      uses: actions/attest@v4.1.0
       with:
         sbom-path: sbom.spdx.json
         subject-path: ${{ github.workspace }}
