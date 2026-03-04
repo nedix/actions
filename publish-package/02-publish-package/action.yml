@@ -112,8 +112,8 @@ runs:
       uses: docker/build-push-action@v6.19.2
       with:
         build-args: ${{ inputs.build_arguments }}
-        cache-from: ${{ inputs.enable_cache == 'true' && format('type=registry,ref={1}/{2}:{3}', 'ghcr.io', github.repository, inputs.cache_tag) || '' }}
-        cache-to: ${{ inputs.enable_cache == 'true' && format('type=registry,ref={1}/{2}:{3},mode=max', 'ghcr.io', github.repository, inputs.cache_tag) || '' }}
+        cache-from: ${{ inputs.enable_cache == 'true' && format('{0}={1}/{2}:{3}', 'type=registry,ref', 'ghcr.io', github.repository, inputs.cache_tag) || '' }}
+        cache-to: ${{ inputs.enable_cache == 'true' && format('{0}={1}/{2}:{3},{4}', 'type=registry,ref', 'ghcr.io', github.repository, inputs.cache_tag, 'mode=max') || '' }}
         context: ${{ inputs.context }}
         file: ${{ inputs.file == 'auto' && steps.find-containerfile.outputs.file || inputs.file }}
         platforms: ${{ inputs.platforms }}
