@@ -68,7 +68,7 @@ runs:
 
     - id: setup-qemu
       name: Setup QEMU
-      uses: docker/setup-qemu-action@v3.7.0
+      uses: docker/setup-qemu-action@v4.0.0
 
     - id: setup-buildx
       name: Setup Buildx
