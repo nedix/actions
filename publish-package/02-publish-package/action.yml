@@ -94,17 +94,20 @@ runs:
 
     - id: prepare-tags
       name: Prepare tags
-      shell: bash
+      shell: sh
       run: |
         echo "latest_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:latest" >> $GITHUB_OUTPUT
         echo "short_sha_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
         echo "version_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
         TAGS=""
-        while IFS= read -r TAG; do
-          [ -z "$TAG" ] && continue
-          TAGS+="${{ inputs.registry }}/${{ inputs.registry_path }}:${TAG} "
-        done <<< "${{ inputs.tags }}"     
-        echo "tags=${TAGS% }" >> $GITHUB_OUTPUT
+        while read -r TAG; do
+          TAGS+="${{ inputs.registry }}/${{ inputs.registry_path }}:${TAG}"$'\n'
+        done <<< "${{ inputs.tags }}"
+        {
+          echo "tags<<EOF"
+          printf "%s" "$TAGS"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
 
     - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
       id: build-and-push
