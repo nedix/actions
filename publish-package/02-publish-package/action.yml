@@ -99,6 +99,13 @@ runs:
         echo "latest_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:latest" >> $GITHUB_OUTPUT
         echo "short_sha_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git rev-parse --short=7 HEAD)" >> $GITHUB_OUTPUT
         echo "version_tag=${{ inputs.registry }}/${{ inputs.registry_path }}:$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+        TAG_PREFIX="${{ inputs.registry }}/${{ inputs.registry_path }}:"
+        TAGS=$(printf '%s\n' "${{ inputs.tags }}" | awk -v p="$TAG_PREFIX" 'NF { print p $0 }')
+        {
+          echo "tags<<EOF"
+          echo "$TAGS"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
 
     - if: inputs.file != 'auto' || steps.find-containerfile.outputs.file != 'none'
       id: build-and-push
@@ -116,7 +123,7 @@ runs:
           ${{ inputs.enable_latest_tag == 'true' && steps.prepare-tags.outputs.latest_tag || '' }}
           ${{ inputs.enable_short_sha_tag == 'true' && steps.prepare-tags.outputs.short_sha_tag || '' }}
           ${{ inputs.enable_version_tag == 'true' && steps.prepare-tags.outputs.version_tag || '' }}
-          ${{ inputs.tags }}
+          ${{ steps.prepare-tags.outputs.tags }}
         target: ${{ inputs.target }}
 
     - if: inputs.registry == 'docker.io' && steps.build-and-push.conclusion == 'success'
