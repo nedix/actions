@@ -13,7 +13,7 @@
     {
       depNameTemplate: "Renovate GitHub action",
       fileMatch: ["update-dependencies/02-renovate/action.yml$"],
-      matchStrings: ["action: renovatebot/github-action@(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      matchStrings: ["action: renovatebot/github-action@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
       datasourceTemplate: "github-tags",
       packageNameTemplate: "renovatebot/github-action",
     },
