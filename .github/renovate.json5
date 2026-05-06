@@ -6,14 +6,14 @@
     {
       depNameTemplate: "Renovate container",
       fileMatch: ["update-dependencies/02-renovate/action.yml$"],
-      matchStrings: ["renovate-version: (?<currentValue>[^ ]*)"],
+      matchStrings: ["renovate-version: (?<currentValue>\\d+\\.\\d+\\.\\d+)"],
       datasourceTemplate: "docker",
       packageNameTemplate: "renovate/renovate",
     },
     {
       depNameTemplate: "Renovate GitHub action",
       fileMatch: ["update-dependencies/02-renovate/action.yml$"],
-      matchStrings: ["action: renovatebot/github-action@(?<currentValue>.*?)\\n"],
+      matchStrings: ["action: renovatebot/github-action@(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
       datasourceTemplate: "github-tags",
       packageNameTemplate: "renovatebot/github-action",
     },
