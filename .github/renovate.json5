@@ -2,4 +2,34 @@
   extends: [
     "https://raw.githubusercontent.com/nedix/actions/main/renovate.json5",
   ],
+  customManagers: [
+    {
+      depNameTemplate: "Renovate container",
+      fileMatch: ["update-dependencies/02-renovate/action.yml$"],
+      matchStrings: ["renovate-version: (?<currentValue>.*?)\\n"],
+      datasourceTemplate: "docker",
+      packageNameTemplate: "renovate/renovate",
+    },
+    {
+      depNameTemplate: "Renovate GitHub action",
+      fileMatch: ["update-dependencies/02-renovate/action.yml$"],
+      matchStrings: ["action: renovatebot/github-action@(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-tags",
+      packageNameTemplate: "renovatebot/github-action",
+    },
+  ],
+  packageRules: [
+    {
+      description: "Custom versioning for Renovate container",
+      matchPackageNames: ["renovate/renovate"],
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+    },
+    {
+      description: "Custom versioning for Renovate GitHub action",
+      matchPackageNames: ["renovatebot/github-action"],
+      extractVersion: "^v(?<version>.*)$",
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$",
+    },
+  ],
+
 }
