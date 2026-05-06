@@ -6,7 +6,7 @@
     {
       depNameTemplate: "Renovate container",
       fileMatch: ["update-dependencies/02-renovate/action.yml$"],
-      matchStrings: ["renovate-version: (?<currentValue>.*?)\\n"],
+      matchStrings: ["renovate-version: (?<currentValue>[^ ]*)"],
       datasourceTemplate: "docker",
       packageNameTemplate: "renovate/renovate",
     },
