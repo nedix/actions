@@ -22,13 +22,11 @@
     {
       description: "Custom versioning for Renovate container",
       matchPackageNames: ["renovate/renovate"],
-      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
     },
     {
       description: "Custom versioning for Renovate GitHub action",
       matchPackageNames: ["renovatebot/github-action"],
       extractVersion: "^v(?<version>.*)$",
-      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$",
     },
   ],
 
