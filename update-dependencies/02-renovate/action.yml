@@ -50,7 +50,7 @@ runs:
         action: renovatebot/github-action@v46.1.13
         attempt_limit: 3
         with: |
-          renovate-version: 44.41.1
+          renovate-version: 44.43.0
           token: ${{ inputs.token }}
 
     - id: save-change-count
