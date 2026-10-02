@@ -64,17 +64,18 @@ runs:
         build_arguments: ${{ inputs.build_arguments }}
         cache_tag: ${{ inputs.cache_tag }}
         context: ${{ inputs.context }}
-        file: ${{ inputs.file }}
-        platforms: ${{ inputs.platforms }}
-        registry: ${{ inputs.registry }}
-        registry_path: ${{ inputs.registry_path }}
-        registry_username: ${{ inputs.registry_username }}
-        registry_password: ${{ inputs.registry_password }}
-        tags: ${{ inputs.tags }}
         enable_cache: ${{ inputs.enable_cache }}
         enable_latest_tag: ${{ inputs.enable_latest_tag }}
         enable_short_sha_tag: ${{ inputs.enable_short_sha_tag }}
         enable_version_tag: ${{ inputs.enable_version_tag }}
+        file: ${{ inputs.file }}
+        platforms: ${{ inputs.platforms }}
+        registry: ${{ inputs.registry }}
+        registry_password: ${{ inputs.registry_password }}
+        registry_path: ${{ inputs.registry_path }}
+        registry_username: ${{ inputs.registry_username }}
+        tags: ${{ inputs.tags }}
+        target: ${{ inputs.target }}
 
     - if: inputs.registry == 'docker.io'
       id: update-docker-hub-information
