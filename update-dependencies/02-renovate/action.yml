@@ -40,7 +40,6 @@ runs:
       name: Renovate dependencies
       uses: Wandalen/wretry.action@v3.8.0
       env:
-        LOG_LEVEL: debug
         RENOVATE_AUTODISCOVER: true
         RENOVATE_AUTODISCOVER_FILTER: ${{ github.event.repository.full_name }}
         RENOVATE_AUTOMERGE: true
