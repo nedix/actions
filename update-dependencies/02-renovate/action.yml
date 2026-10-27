@@ -38,7 +38,7 @@ runs:
     - if: steps.skip-duplicate-actions.outputs.should_skip != 'true'
       id: renovate-dependencies
       name: Renovate dependencies
-      uses: Wandalen/wretry.action@v3.8.0
+      uses: renovatebot/github-action@v46.1.13
       env:
         RENOVATE_AUTODISCOVER: true
         RENOVATE_AUTODISCOVER_FILTER: ${{ github.event.repository.full_name }}
@@ -46,11 +46,8 @@ runs:
         RENOVATE_PLATFORM: github
         RENOVATE_PR_HOURLY_LIMIT: 0
       with:
-        action: renovatebot/github-action@v46.1.13
-        attempt_limit: 3
-        with: |
-          renovate-version: 44.161.1
-          token: ${{ inputs.token }}
+        renovate-version: 44.161.1
+        token: ${{ inputs.token }}
 
     - id: save-change-count
       name: Save change count
